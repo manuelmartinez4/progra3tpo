@@ -1,0 +1,71 @@
+# Los valores esperados suponen la configuracion por defecto: la carga deja en la
+# base solo los datos del dominio (APP_SEED_ELIMINAR_AJENOS=true).
+
+### Verificar conexion y datos    (esperado: 8 vertices, 12 aristas, dirigido false)
+GET http://localhost:8080/api/grafo/resumen
+
+### Recorridos: BFS    (esperado: A B C D E F G H)
+GET http://localhost:8080/api/grafo/bfs?origen=A
+
+### Recorridos: DFS    (esperado: A B C D E F H G)
+GET http://localhost:8080/api/grafo/dfs?origen=A
+
+### Dijkstra    (esperado: A-C-B, costo 3; el directo cuesta 4)
+GET http://localhost:8080/api/grafo/dijkstra?origen=A&destino=B
+
+### Dijkstra    (esperado: A-C-B-D-E-F-H, costo 17)
+GET http://localhost:8080/api/grafo/dijkstra?origen=A&destino=H
+
+### Prim    (esperado: 7 aristas, costo 18)
+GET http://localhost:8080/api/grafo/prim?origen=A
+
+### Kruskal    (esperado: 7 aristas, costo 18)
+GET http://localhost:8080/api/grafo/kruskal
+
+### Floyd-Warshall    (esperado: 64 pares, A->H = 17)
+GET http://localhost:8080/api/grafo/floyd
+
+### QuickSort por ratio, ascendente
+GET http://localhost:8080/api/seleccion/quicksort?criterio=ratio
+
+### MergeSort por peso, ascendente y estable    (esperado: P5 P4 P2 P3 P1)
+GET http://localhost:8080/api/seleccion/mergesort?criterio=peso
+
+### Greedy    (esperado: P1 y P4, valor 16)
+GET http://localhost:8080/api/seleccion/greedy?capacidad=10
+
+### Mochila 0/1    (esperado: P2 y P3, valor 18: greedy no es optimo)
+GET http://localhost:8080/api/seleccion/dinamica?capacidad=10
+
+### Backtracking    (esperado: 11 rutas)
+GET http://localhost:8080/api/grafo/rutas?origen=A&destino=H&costoMaximo=20&saltosMaximos=6
+
+### Backtracking con limites exactos    (esperado: 1 ruta, A-C-B-D-E-F-H, costo 17)
+GET http://localhost:8080/api/grafo/rutas?origen=A&destino=H&costoMaximo=17&saltosMaximos=6
+
+### Branch and Bound    (esperado: carga maxima 9)
+GET http://localhost:8080/api/seleccion/repartir?contenedores=3
+
+### Error: id inexistente    (esperado: 400)
+GET http://localhost:8080/api/grafo/dijkstra?origen=A&destino=Q
+
+### Error: parametro ausente    (esperado: 400)
+GET http://localhost:8080/api/grafo/dijkstra?origen=A
+
+### Error: tipo incorrecto    (esperado: 400)
+GET http://localhost:8080/api/seleccion/dinamica?capacidad=10.5
+
+### Error: cero camiones    (esperado: 400)
+GET http://localhost:8080/api/seleccion/repartir?contenedores=0
+
+### Error: demasiados camiones    (esperado: 400, el tope es 100)
+GET http://localhost:8080/api/seleccion/repartir?contenedores=101
+
+### Error: capacidad NaN    (esperado: 400)
+GET http://localhost:8080/api/seleccion/greedy?capacidad=NaN
+
+### Capacidad enorme    (esperado: 200, los 5 paquetes, valor 37)
+GET http://localhost:8080/api/seleccion/dinamica?capacidad=2147483647
+
+### Opcional no implementado    (esperado: 501)
+GET http://localhost:8080/api/grafo/ucs?origen=A&destino=H
